@@ -13,6 +13,8 @@ import {
 } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
+const API_BASE_URL = "/api";
+
 const FinalSelection = () => {
   const navigate = useNavigate();
   const [selections, setSelections] = useState({ yes_profiles: [], maybe_profiles: [] });
@@ -26,12 +28,12 @@ const FinalSelection = () => {
     const fetchData = async () => {
       try {
         // Fetch profiles
-        const profilesResponse = await fetch('http://localhost:8000/api/profiles/');
+        const profilesResponse = await fetch(`${API_BASE_URL}/profiles/`);
         const profilesData = await profilesResponse.json();
         setProfiles(profilesData);
 
         // Fetch user selections (you might want to add actual user ID)
-        const selectionsResponse = await fetch('http://localhost:8000/api/get-selections/?userId=temp');
+        const selectionsResponse = await fetch(`${API_BASE_URL}/get-selections/?userId=temp`);
         const selectionsData = await selectionsResponse.json();
         if (selectionsData.status === 'success') {
           setSelections(selectionsData.data);
@@ -62,7 +64,7 @@ const FinalSelection = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:8000/api/final-selection/', {
+      const response = await fetch(`${API_BASE_URL}/final-selection/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

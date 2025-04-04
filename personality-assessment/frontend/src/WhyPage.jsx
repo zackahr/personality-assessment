@@ -15,6 +15,8 @@ import {
   Alert
 } from '@mui/material';
 
+const API_BASE_URL = "/api";
+
 const WhyPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -29,7 +31,7 @@ const WhyPage = () => {
   useEffect(() => {
     const fetchProfiles = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/profiles/');
+        const response = await fetch(`${API_BASE_URL}/profiles/`);
         const data = await response.json();
         setProfiles(data);
         setLoading(false);
@@ -113,7 +115,7 @@ const WhyPage = () => {
       console.log('Payload:', payload);
   
       // Send request
-      const response = await fetch('http://localhost:8000/api/save-response/', {
+      const response = await fetch(`${API_BASE_URL}/save-response/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),

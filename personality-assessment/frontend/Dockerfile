@@ -1,14 +1,15 @@
-# Use node for building
-FROM node:18 AS builder
+FROM node:20
 
 WORKDIR /app
-COPY package.json package-lock.json ./
-RUN npm install
-COPY . .
-RUN npm run build
 
-# Use nginx to serve static files
-FROM nginx:latest
-COPY --from=builder /app/dist /usr/share/nginx/html
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+# Copy package files first (caching optimization)
+COPY package*.json ./
+
+# Install both prod AND dev dependencies (Vite is needed in dev)
+RUN npm install
+
+# Copy the rest of the app
+COPY . .
+
+# Use npm to run the dev script (not direct "vite" command)
+CMD ["npm", "run", "dev"]

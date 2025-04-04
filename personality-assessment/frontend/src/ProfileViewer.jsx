@@ -8,6 +8,8 @@ import HelpIcon from '@mui/icons-material/Help';
 import CancelIcon from '@mui/icons-material/Cancel';
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 
+const API_BASE_URL = "/api";
+
 const ProfileViewer = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -23,7 +25,7 @@ const ProfileViewer = () => {
   useEffect(() => {
     const fetchProfiles = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/profiles/');
+        const response = await fetch(`${API_BASE_URL}/profiles/`);
         const data = await response.json();
         setProfiles(data);
         setLoading(false);
@@ -74,7 +76,7 @@ const ProfileViewer = () => {
 
     // Save selections to backend
     try {
-      await fetch('http://localhost:8000/api/selections/', {
+      await fetch(`${API_BASE_URL}/selections/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

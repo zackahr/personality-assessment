@@ -19,6 +19,8 @@ import {
 } from '@mui/material';
 import { Science, CheckCircle } from '@mui/icons-material';
 
+const API_BASE_URL = "/api";
+
 const questions = [
   "Extraverted, enthusiastic",
   "Critical, quarrelsome",
@@ -53,7 +55,7 @@ export default function PersonalityTest() {
       console.log('Responses saved to localStorage:', data);
 
       // Initialize selections in the backend
-      await fetch('http://localhost:8000/api/selections/', {
+      await fetch(`${API_BASE_URL}/selections/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

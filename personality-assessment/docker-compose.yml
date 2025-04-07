@@ -1,43 +1,52 @@
 version: '3.8'
 
 services:
-  # Nginx Reverse Proxy
   nginx:
     image: nginx:alpine
     container_name: nginx-proxy
     ports:
-      - "80:80"      # HTTP
-      #- "443:443"    # HTTPS (uncomment if SSL is configured)
+      - "80:80"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./nginx/conf.d:/etc/nginx/conf.d
-      # - ./ssl:/etc/nginx/ssl  # Uncomment for SSL certificates
     depends_on:
       - frontend
       - backend
     restart: always
+    networks:
+      - app-network
 
-  # React Frontend (Vite)
   frontend:
     build: ./frontend
     container_name: react-frontend
-    # ports:
-      # - "8080:8080"
+    expose:
+      - "8080"  # Important for internal access
     volumes:
       - ./frontend/src:/app/src
     restart: always
+    networks:
+      - app-network
+    environment:
+      - VITE_API_URL=/api  # Ensure frontend knows to use /api
 
-  # Django Backend
   backend:
     build: ./backend
     container_name: django-backend
-    # ports:
-      # - "8000:8000"
+    expose:
+      - "8000"  # Important for internal access
     volumes:
       - ./backend:/app
     environment:
       - DEBUG=0
+      - DJANGO_ALLOWED_HOSTS=traitpilot.live,146.190.69.47,backend
+      - CSRF_TRUSTED_ORIGINS=http://traitpilot.live,http://146.190.69.47
     restart: always
+    networks:
+      - app-network
     command: >
       sh -c "python manage.py migrate &&
              python manage.py runserver 0.0.0.0:8000"
+
+networks:
+  app-network:
+    driver: bridge

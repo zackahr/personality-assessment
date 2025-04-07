@@ -25,7 +25,16 @@ SECRET_KEY = 'django-insecure-=iftw2jhf06++b%u!t-j%@pr-@t5#e0x)q8s)b2_ga^$comc0$
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# Allow all these hosts
+ALLOWED_HOSTS = [
+    'traitpilot.live',      # Your domain
+    '146.190.69.47',       # Your server IP
+    'localhost',           # Local development
+    'backend',             # Docker service name
+    'frontend',            # Frontend service name
+    '0.0.0.0',             # For Docker internal networking
+    '127.0.0.1'            # Localhost
+]
 
 # Application definition
 

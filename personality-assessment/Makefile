@@ -6,7 +6,7 @@ SERVICE_NAME = frontend
 
 # Start containers
 up:
-	$(DOCKER_COMPOSE) up
+	$(DOCKER_COMPOSE) up -d
 
 # Stop containers
 down:

@@ -7,96 +7,108 @@ import {
   Box,
   Button,
   Fade,
+  List,
+  ListItem,
+  ListItemText,
+  Divider,
 } from '@mui/material';
 
-const conditions = {
+const scenario = {
+  title: "GlobaTech International Expansion Initiative",
+  description: `You are part of a strategic task force at GlobaTech, a fast-growing company that manufactures smart home appliances. GlobaTech is planning to expand into a new international market, and your team has been asked to lead this initiative. The project includes:`,
+  points: [
+    "Market Selection: Choosing the most promising country or region for entry.",
+    "Product Strategy: Deciding which product lines to introduce and how to position them.",
+    "Operational Planning: Assessing logistics, partnerships, and regulatory considerations to ensure a successful launch."
+  ]
+};
+
+const taskVariations = {
   creative: {
-    title: "Creative Condition",
-    description: `You are responsible for assembling a team that will develop innovative solutions to
-    address sustainability challenges on university campuses. This project requires creative
-    thinking, generating novel ideas, and exploring unconventional approaches. The most
-    successful teams will be those that can think outside the box and develop original
-    concepts.`,
-    goal: `The team's specific goal is to create new initiatives that could significantly reduce campus
-    waste, energy consumption, or water usage while engaging the student body. They'll need
-    to brainstorm ideas, develop concepts, and create proposals that are both innovative and
-    implementable.`
+    title: "Task: Innovative Market Entry",
+    description: `We're looking for a bold and original approach to international expansion. Think beyond conventional strategies—how can GlobaTech surprise and engage a new audience? We encourage imaginative thinking, fresh branding ideas, and creative product-market fit solutions. You have the freedom to explore new directions for the company's global future.`,
+    instruction: `You are in charge of assembling a team to lead this project. We will show you several personality profiles; please choose four people whom you believe will work best on this task.`,
+    framing: "Creative Framing"
   },
   analytical: {
-    title: "Analytical Condition",
-    description: `You are responsible for assembling a team that will analyze sustainability data from
-    university campuses to identify improvement opportunities. This project requires
-    systematic analysis, careful evaluation of evidence, and logical problem-solving. The most
-    successful teams will be those that can thoroughly examine information and draw well-
-    reasoned conclusions.`,
-    goal: `The team's specific goal is to analyze data on campus waste, energy consumption, and
-    water usage to identify patterns, inefficiencies, and opportunities for improvement. They'll
-    need to examine metrics, evaluate current practices, and develop evidence-based
-    recommendations.`
+    title: "Task: Data-Driven Market Analysis",
+    description: `This project will require careful analysis of international market trends, cost structures, competitive landscapes, and legal constraints. We need a rigorous, evidence-based plan to ensure GlobaTech's success in a new region. Systematic thinking, data interpretation, and strategic risk assessment will be key.`,
+    instruction: `You are in charge of assembling a team to lead this project. We will show you several personality profiles; please choose four people whom you believe will work best on this task.`,
+    framing: "Analytical Framing"
   },
   neutral: {
-    title: "Project Description",
-    description: `You are responsible for assembling a team that will work on a sustainability project for
-    university campuses. They'll need to work together effectively to complete various tasks
-    and achieve project goals. The most successful teams will be those that address the
-    challenge efficiently.`,
-    goal: `The team's specific goal is to improve campus practices related to waste, energy
-    consumption, or water usage. They'll need to understand the current situation, develop
-    appropriate solutions, and create recommendations for implementation.`
+    title: "Task: Strategic Expansion Plan",
+    description: `You are tasked with developing a viable strategy for GlobaTech to expand into a new international market. Consider product strategy, market selection, and operational planning. There's no single right way—just ensure your proposal is well-rounded and addresses the key components for a successful expansion.`,
+    instruction: `You are in charge of assembling a team to lead this project. We will show you several personality profiles; please choose four people whom you believe will work best on this task.`,
+    framing: "Neutral (Control) Framing"
   }
 };
 
 const TaskDescription = () => {
   const navigate = useNavigate();
-  const [condition, setCondition] = useState(null);
+  const [selectedTaskKey, setSelectedTaskKey] = useState(null);
 
   useEffect(() => {
-    // Randomly select a condition if not already set
-    if (!condition) {
-      const conditionTypes = Object.keys(conditions);
-      const randomCondition = conditionTypes[Math.floor(Math.random() * conditionTypes.length)];
-      setCondition(randomCondition);
-      // Store the condition in localStorage for later use
-      localStorage.setItem('taskCondition', randomCondition);
+    // Randomly select a task variation if not already set
+    if (!selectedTaskKey) {
+      const taskKeys = Object.keys(taskVariations);
+      const randomTaskKey = taskKeys[Math.floor(Math.random() * taskKeys.length)];
+      setSelectedTaskKey(randomTaskKey);
+      // Store the framing in localStorage for later use
+      localStorage.setItem('taskCondition', taskVariations[randomTaskKey].framing);
     }
-  }, [condition]);
+  }, [selectedTaskKey]);
 
   const handleContinue = () => {
-    navigate('/profile/1');
+    navigate('/how-to-evaluate');
   };
 
-  if (!condition) return null;
+  if (!selectedTaskKey) return null;
 
-  const selectedCondition = conditions[condition];
+  const selectedTask = taskVariations[selectedTaskKey];
 
   return (
     <Container maxWidth="md" sx={{ py: 4 }}>
       <Fade in timeout={500}>
         <Paper elevation={3} sx={{ p: 4, borderRadius: 2 }}>
-          <Typography variant="h4" component="h1" sx={{ mb: 4, color: 'primary.main', fontWeight: 'bold' }}>
-            {selectedCondition.title}
+          <Typography variant="h4" component="h1" sx={{ mb: 3, color: 'primary.main', fontWeight: 'bold', textAlign: 'center' }}>
+            {scenario.title}
           </Typography>
 
-          <Box sx={{ mb: 4 }}>
-            <Typography variant="h6" sx={{ mb: 2, color: 'primary.main' }}>
-              Task Description
+          <Box sx={{ mb: 3 }}>
+            <Typography variant="h6" sx={{ mb: 1, color: 'text.secondary' }}>
+              Overall Scenario:
             </Typography>
             <Typography variant="body1" paragraph>
-              {selectedCondition.description}
+              {scenario.description}
             </Typography>
+            <List dense sx={{ pl: 2, mb: 2 }}>
+              {scenario.points.map((point, index) => (
+                <ListItem key={index} sx={{ pl: 0, pt: 0, pb: 0.5 }}>
+                  <ListItemText primary={`• ${point}`} />
+                </ListItem>
+              ))}
+            </List>
           </Box>
 
-          <Box sx={{ mb: 4 }}>
-            <Typography variant="h6" sx={{ mb: 2, color: 'primary.main' }}>
-              Team Goal
+          <Divider sx={{ my: 3 }} />
+
+          <Box sx={{ mb: 4, p: 2, backgroundColor: 'grey.100', borderRadius: 1 }}>
+            <Typography variant="h5" component="h2" sx={{ mb: 2, color: 'secondary.main', fontWeight: 'bold' }}>
+              Your Task
+            </Typography>
+            <Typography variant="body1" paragraph >
+              {selectedTask.description}
             </Typography>
             <Typography variant="body1" paragraph>
-              {selectedCondition.goal}
+              {selectedTask.instruction}
             </Typography>
           </Box>
+          
+          <Divider sx={{ my: 4 }} />
 
-          <Typography variant="body1" paragraph sx={{ fontWeight: 'bold' }}>
-            Please select individuals who you believe would form an effective team for this {condition === 'creative' ? 'creative' : condition === 'analytical' ? 'analytical' : ''} challenge.
+          <Typography variant="body1" paragraph sx={{ fontWeight: 'bold', textAlign: 'center' }}>
+            Please select individuals who you believe would form an effective team for the task described above.
           </Typography>
 
           <Box sx={{ mt: 4, display: 'flex', justifyContent: 'center' }}>
@@ -117,7 +129,7 @@ const TaskDescription = () => {
                 }
               }}
             >
-              Continue to Profile Selection
+              Continue to Evaluation Instructions
             </Button>
           </Box>
         </Paper>

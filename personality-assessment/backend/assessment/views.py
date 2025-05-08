@@ -189,7 +189,8 @@ def save_to_csv(data):
         'profile13_decision', 'profile14_decision', 'profile15_decision', 'profile16_decision',
         'profile17_decision', 'profile18_decision', 'profile19_decision',
         'final_profile_1', 'final_profile_2', 'final_profile_3', 'final_profile_4',
-        'open_ended_q1', 'open_ended_q2'
+        'open_ended_q1', 'open_ended_q2',
+        'prolific_id', 'task_condition', 'age', 'gender', 'education_level'
     ]
     
     # Check if file exists to determine if we need to write headers
@@ -213,8 +214,34 @@ def save_response(request):
         # Parse the JSON data from request body
         data = json.loads(request.body)
         
+        # Prepare data for CSV, ensuring all expected headers are present
+        csv_data = {
+            'participant_id': data.get('participant_id'),
+            'start_time': data.get('start_time'),
+            'end_time': data.get('end_time'),
+            'prolific_id': data.get('prolific_id'),
+            'task_condition': data.get('task_condition'),
+            'age': data.get('age'),
+            'gender': data.get('gender'),
+            'education_level': data.get('education_level'),
+            'open_ended_q1': data.get('open_ended_q1'),
+            'open_ended_q2': data.get('open_ended_q2')
+        }
+
+        # Add personality questions
+        for i in range(1, 11):
+            csv_data[f'personality_q{i}'] = data.get(f'personality_q{i}')
+
+        # Add profile decisions
+        for i in range(1, 20): # Assuming 19 profiles
+            csv_data[f'profile{i}_decision'] = data.get(f'profile{i}_decision', 'not_viewed')
+        
+        # Add final profile selections
+        for i in range(1, 5):
+            csv_data[f'final_profile_{i}'] = data.get(f'final_profile_{i}')
+
         # Save the data to CSV
-        save_to_csv(data)
+        save_to_csv(csv_data)
         
         return JsonResponse({
             'status': 'success',

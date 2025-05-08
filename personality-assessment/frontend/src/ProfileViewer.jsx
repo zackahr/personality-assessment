@@ -8,12 +8,30 @@ import HelpIcon from '@mui/icons-material/Help';
 import CancelIcon from '@mui/icons-material/Cancel';
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import { alpha } from '@mui/material/styles';
 
 const API_BASE_URL = "/api";
+
+const traitDisplayMap = {
+  Extraversion: "Extraversion (Outgoing)",
+  Openness: "Openness (Creativity)",
+  Conscientiousness: "Conscientiousness (Organization)",
+  EmotionalStability: "Neuroticism (Emotionality)",
+  Agreeableness: "Agreeableness (Friendliness)",
+};
+
+const valueColorMap = {
+  Low: "#B5D9F8",
+  Moderate: "#D8C3F0",
+  High: "#F5A25D",
+};
 
 const TraitCard = ({ trait, value, color }) => {
   const theme = useTheme();
   
+  const cardBaseColor = valueColorMap[value] || theme.palette.grey[200];
+  const valueTextColor = valueColorMap[value] || color;
+
   // Calculate if this is the Extraversion trait
   const isExtraversion = trait === 'Extraversion';
   
@@ -27,18 +45,18 @@ const TraitCard = ({ trait, value, color }) => {
         flexDirection: { xs: 'row', sm: 'column' },
         alignItems: 'center',
         justifyContent: { xs: 'space-between', sm: 'center' },
-        background: `linear-gradient(135deg, ${color}10, ${color}15)`,
-        border: `1px solid ${color}20`,
+        background: `linear-gradient(135deg, ${alpha(cardBaseColor, 0.2)}, ${alpha(cardBaseColor, 0.3)})`,
+        border: `1px solid ${alpha(cardBaseColor, 0.4)}`,
         transition: 'all 0.3s ease',
         flex: 1,
         minWidth: { xs: '100%', sm: 0 },
         height: { xs: isExtraversion ? '40px' : '32px', sm: 'auto' },
         transform: isExtraversion ? 'scale(1.05)' : 'none',
         zIndex: isExtraversion ? 1 : 0,
-        boxShadow: isExtraversion ? `0 2px 8px ${color}30` : 'none',
+        boxShadow: isExtraversion ? `0 2px 8px ${alpha(cardBaseColor, 0.35)}` : 'none',
         '&:hover': {
           transform: `translateY(-1px) ${isExtraversion ? 'scale(1.05)' : 'none'}`,
-          boxShadow: `0 2px 8px ${color}20`,
+          boxShadow: `0 2px 8px ${alpha(cardBaseColor, 0.3)}`,
         },
       }}
     >
@@ -53,13 +71,13 @@ const TraitCard = ({ trait, value, color }) => {
           fontSize: { xs: isExtraversion ? '0.8rem' : '0.7rem', sm: isExtraversion ? '0.9rem' : '0.8rem' }
         }}
       >
-        {trait}
+        {traitDisplayMap[trait] || trait}
       </Typography>
       <Typography
         variant="h6"
         sx={{
           fontWeight: 'bold',
-          color: color,
+          color: valueTextColor,
           textAlign: 'center',
           fontSize: { xs: isExtraversion ? '0.9rem' : '0.8rem', sm: isExtraversion ? '1.1rem' : '1rem' },
           ml: { xs: 1, sm: 0 }
@@ -156,7 +174,14 @@ const ProfileViewer = () => {
     setMaybeProfiles(updatedMaybeProfiles);
     setNoProfiles(updatedNoProfiles);
 
-    // Save selections to backend
+    // Save the specific decision for this profile to localStorage
+    if (response) {
+      localStorage.setItem(`profile${profileId}_decision`, response);
+    } else {
+      localStorage.removeItem(`profile${profileId}_decision`);
+    }
+
+    // Save selections to backend (this endpoint might be for intermediate state)
     try {
       await fetch(`${API_BASE_URL}/selections/`, {
         method: 'POST',
@@ -192,8 +217,8 @@ const ProfileViewer = () => {
     localStorage.setItem('yesProfiles', JSON.stringify(yesProfiles));
     console.log('Yes profiles saved to localStorage:', yesProfiles);
 
-    // Navigate to the "/why" page with the selected profiles
-    navigate('/why', { state: { selectedProfiles: yesProfiles } });
+    // Navigate to the "/demographics" page
+    navigate('/why');
   };
 
   const getTraitColor = (trait, value) => {
@@ -372,7 +397,7 @@ const ProfileViewer = () => {
               fontSize: { xs: '1.25rem', sm: '2.125rem' }
             }}
           >
-            Profile #{profileId}
+            {/* Profile #{profileId} */}
           </Typography>
 
           {/* Selection Counters */}
@@ -456,7 +481,7 @@ const ProfileViewer = () => {
               .map(([trait, value]) => (
                 <TraitCard
                   key={trait}
-                  trait={trait === 'EmotionalStability' ? 'Emotional Stability' : trait}
+                  trait={trait}
                   value={value}
                   color={getTraitColor(trait)}
                 />

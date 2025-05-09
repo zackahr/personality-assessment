@@ -1,5 +1,5 @@
 # Variables
-DOCKER_COMPOSE = docker-compose
+DOCKER_COMPOSE = docker compose
 SERVICE_NAME = frontend
 
 .PHONY: up down build rebuild clean clean-all logs shell

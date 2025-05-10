@@ -1,6 +1,7 @@
 import os
 import csv
 import json
+import random
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .models import PersonalityResponse
@@ -166,7 +167,23 @@ PROFILES = {
 @csrf_exempt
 def get_profiles(request):
     if request.method == 'GET':
-        return JsonResponse(PROFILES)
+        # Convert profiles to list of tuples (id, profile_data)
+        profile_list = list(PROFILES.items())
+        # Shuffle the profiles
+        random.shuffle(profile_list)
+        
+        # Create a mapping of URL parameters (1-19) to actual profile IDs
+        url_to_profile_map = {}
+        for i, (profile_id, _) in enumerate(profile_list, 1):
+            url_to_profile_map[str(i)] = str(profile_id)
+        
+        # Convert back to dictionary with new random order
+        shuffled_profiles = dict(profile_list)
+        
+        return JsonResponse({
+            'profiles': shuffled_profiles,
+            'urlMapping': url_to_profile_map
+        })
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)
 
 def save_to_csv(data):

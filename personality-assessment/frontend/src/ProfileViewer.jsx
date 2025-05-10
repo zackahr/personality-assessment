@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Container, Typography, Button, Paper, Box, Grid, Fade, Chip, LinearProgress, IconButton, useTheme } from '@mui/material';
+import { Container, Typography, Button, Paper, Box, Grid, Fade, Chip, LinearProgress, IconButton, useTheme, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -16,7 +16,7 @@ const traitDisplayMap = {
   Extraversion: "Extraversion (Outgoing)",
   Openness: "Openness (Creativity)",
   Conscientiousness: "Conscientiousness (Organization)",
-  EmotionalStability: "Neuroticism (Emotionality)",
+  EmotionalStability: "Emotional Stability",
   Agreeableness: "Agreeableness (Friendliness)",
 };
 
@@ -92,21 +92,24 @@ const TraitCard = ({ trait, value, color }) => {
 const ProfileViewer = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const profileId = parseInt(id, 10);
+  const urlProfileId = parseInt(id, 10);
 
   const [profiles, setProfiles] = useState({});
+  const [urlMapping, setUrlMapping] = useState({});
   const [loading, setLoading] = useState(true);
 
   const [yesProfiles, setYesProfiles] = useState([]);
   const [maybeProfiles, setMaybeProfiles] = useState([]);
   const [noProfiles, setNoProfiles] = useState([]);
+  const [showWarningDialog, setShowWarningDialog] = useState(false);
 
   useEffect(() => {
     const fetchProfiles = async () => {
       try {
         const response = await fetch(`${API_BASE_URL}/profiles/`);
         const data = await response.json();
-        setProfiles(data);
+        setProfiles(data.profiles);
+        setUrlMapping(data.urlMapping);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching profiles:', error);
@@ -117,24 +120,27 @@ const ProfileViewer = () => {
     fetchProfiles();
   }, []);
 
+  // Get the actual profile ID from the URL parameter
+  const actualProfileId = urlMapping[urlProfileId] ? parseInt(urlMapping[urlProfileId], 10) : null;
+
   const handleNext = () => {
-    const availableProfiles = Object.keys(profiles).filter(
-      (id) => !noProfiles.includes(parseInt(id, 10))
+    const availableProfiles = Object.keys(urlMapping).filter(
+      (urlId) => !noProfiles.includes(parseInt(urlMapping[urlId], 10))
     );
-    const currentIndex = availableProfiles.indexOf(profileId.toString());
+    const currentIndex = availableProfiles.indexOf(urlProfileId.toString());
     const nextIndex = (currentIndex + 1) % availableProfiles.length;
-    const nextProfileId = availableProfiles[nextIndex];
-    navigate(`/profile/${nextProfileId}`);
+    const nextUrlId = availableProfiles[nextIndex];
+    navigate(`/profile/${nextUrlId}`);
   };
 
   const handlePrevious = () => {
-    const availableProfiles = Object.keys(profiles).filter(
-      (id) => !noProfiles.includes(parseInt(id, 10))
+    const availableProfiles = Object.keys(urlMapping).filter(
+      (urlId) => !noProfiles.includes(parseInt(urlMapping[urlId], 10))
     );
-    const currentIndex = availableProfiles.indexOf(profileId.toString());
+    const currentIndex = availableProfiles.indexOf(urlProfileId.toString());
     const previousIndex = (currentIndex - 1 + availableProfiles.length) % availableProfiles.length;
-    const previousProfileId = availableProfiles[previousIndex];
-    navigate(`/profile/${previousProfileId}`);
+    const previousUrlId = availableProfiles[previousIndex];
+    navigate(`/profile/${previousUrlId}`);
   };
 
   const handleResponse = async (response) => {
@@ -144,29 +150,29 @@ const ProfileViewer = () => {
 
     // Check if this profile is already in the selected category
     const isAlreadyInCategory = (
-      (response === 'yes' && yesProfiles.includes(profileId)) ||
-      (response === 'maybe' && maybeProfiles.includes(profileId)) ||
-      (response === 'no' && noProfiles.includes(profileId))
+      (response === 'yes' && yesProfiles.includes(actualProfileId)) ||
+      (response === 'maybe' && maybeProfiles.includes(actualProfileId)) ||
+      (response === 'no' && noProfiles.includes(actualProfileId))
     );
 
     // If already in the selected category, just remove it
     if (isAlreadyInCategory) {
-      updatedYesProfiles = updatedYesProfiles.filter(id => id !== profileId);
-      updatedMaybeProfiles = updatedMaybeProfiles.filter(id => id !== profileId);
-      updatedNoProfiles = updatedNoProfiles.filter(id => id !== profileId);
+      updatedYesProfiles = updatedYesProfiles.filter(id => id !== actualProfileId);
+      updatedMaybeProfiles = updatedMaybeProfiles.filter(id => id !== actualProfileId);
+      updatedNoProfiles = updatedNoProfiles.filter(id => id !== actualProfileId);
     } else {
       // Remove from all categories first
-      updatedYesProfiles = updatedYesProfiles.filter(id => id !== profileId);
-      updatedMaybeProfiles = updatedMaybeProfiles.filter(id => id !== profileId);
-      updatedNoProfiles = updatedNoProfiles.filter(id => id !== profileId);
+      updatedYesProfiles = updatedYesProfiles.filter(id => id !== actualProfileId);
+      updatedMaybeProfiles = updatedMaybeProfiles.filter(id => id !== actualProfileId);
+      updatedNoProfiles = updatedNoProfiles.filter(id => id !== actualProfileId);
 
       // Add to the new category
       if (response === 'yes' && yesProfiles.length < 4) {
-        updatedYesProfiles.push(profileId);
+        updatedYesProfiles.push(actualProfileId);
       } else if (response === 'maybe') {
-        updatedMaybeProfiles.push(profileId);
+        updatedMaybeProfiles.push(actualProfileId);
       } else if (response === 'no') {
-        updatedNoProfiles.push(profileId);
+        updatedNoProfiles.push(actualProfileId);
       }
     }
 
@@ -176,12 +182,12 @@ const ProfileViewer = () => {
 
     // Save the specific decision for this profile to localStorage
     if (response) {
-      localStorage.setItem(`profile${profileId}_decision`, response);
+      localStorage.setItem(`profile${actualProfileId}_decision`, response);
     } else {
-      localStorage.removeItem(`profile${profileId}_decision`);
+      localStorage.removeItem(`profile${actualProfileId}_decision`);
     }
 
-    // Save selections to backend (this endpoint might be for intermediate state)
+    // Save selections to backend
     try {
       await fetch(`${API_BASE_URL}/selections/`, {
         method: 'POST',
@@ -213,6 +219,14 @@ const ProfileViewer = () => {
   };
 
   const handleSubmit = () => {
+    const totalProfiles = Object.keys(profiles).length;
+    const totalDecisions = yesProfiles.length + maybeProfiles.length + noProfiles.length;
+
+    if (totalDecisions < totalProfiles) {
+      setShowWarningDialog(true);
+      return;
+    }
+
     // Save the 4 "Yes" profiles to localStorage
     localStorage.setItem('yesProfiles', JSON.stringify(yesProfiles));
     console.log('Yes profiles saved to localStorage:', yesProfiles);
@@ -247,8 +261,7 @@ const ProfileViewer = () => {
     );
   }
 
-  const profile = profiles[profileId];
-  if (!profile) {
+  if (!actualProfileId || !profiles[actualProfileId]) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
         <Typography variant="h4" color="error">Profile not found</Typography>
@@ -256,6 +269,7 @@ const ProfileViewer = () => {
     );
   }
 
+  const profile = profiles[actualProfileId];
   const totalProfiles = Object.keys(profiles).length;
   const viewedProfiles = [...new Set([...yesProfiles, ...maybeProfiles, ...noProfiles])].length;
 
@@ -297,8 +311,8 @@ const ProfileViewer = () => {
             maxWidth: '100%',
             px: { xs: 0.5, sm: 2 }
           }}>
-            {Object.keys(profiles).map((id) => {
-              const currentProfileId = parseInt(id, 10);
+            {Object.keys(urlMapping).map((urlId) => {
+              const currentProfileId = parseInt(urlMapping[urlId], 10);
 
               let chipStyle = {
                 width: { xs: 24, sm: 40 },
@@ -350,7 +364,7 @@ const ProfileViewer = () => {
                     bgcolor: 'warning.dark',
                   }
                 };
-              } else if (profileId === currentProfileId) {
+              } else if (urlProfileId === parseInt(urlId, 10)) {
                 chipStyle = {
                   ...chipStyle,
                   bgcolor: 'primary.main',
@@ -376,9 +390,9 @@ const ProfileViewer = () => {
 
               return (
                 <Chip
-                  key={currentProfileId}
-                  label={currentProfileId}
-                  onClick={() => navigate(`/profile/${currentProfileId}`)}
+                  key={urlId}
+                  label={urlId}
+                  onClick={() => navigate(`/profile/${urlId}`)}
                   sx={chipStyle}
                 />
               );
@@ -397,7 +411,7 @@ const ProfileViewer = () => {
               fontSize: { xs: '1.25rem', sm: '2.125rem' }
             }}
           >
-            {/* Profile #{profileId} */}
+            {/* Profile #{urlProfileId} */}
           </Typography>
 
           {/* Selection Counters */}
@@ -557,7 +571,7 @@ const ProfileViewer = () => {
                 variant="contained"
                 startIcon={<CheckCircleIcon sx={{ fontSize: { xs: 16, sm: 24 } }} />}
                 sx={{
-                  bgcolor: getCurrentSelection(profileId) === 'yes' ? 'success.dark' : 'success.main',
+                  bgcolor: getCurrentSelection(actualProfileId) === 'yes' ? 'success.dark' : 'success.main',
                   color: 'white',
                   '&:hover': { 
                     bgcolor: 'success.dark',
@@ -565,13 +579,13 @@ const ProfileViewer = () => {
                   },
                   minWidth: { xs: 80, sm: 160 },
                   height: { xs: 36, sm: 56 },
-                  border: getCurrentSelection(profileId) === 'yes' ? '2px solid white' : 'none',
+                  border: getCurrentSelection(actualProfileId) === 'yes' ? '2px solid white' : 'none',
                   fontSize: { xs: '0.875rem', sm: '1.2rem' },
                   transition: 'all 0.2s ease',
                   px: { xs: 1, sm: 3 }
                 }}
                 onClick={() => handleResponse('yes')}
-                disabled={yesProfiles.length >= 4 && !yesProfiles.includes(profileId)}
+                disabled={yesProfiles.length >= 4 && !yesProfiles.includes(actualProfileId)}
               >
                 Yes
               </Button>
@@ -579,7 +593,7 @@ const ProfileViewer = () => {
                 variant="contained"
                 startIcon={<HelpIcon sx={{ fontSize: { xs: 16, sm: 24 } }} />}
                 sx={{
-                  bgcolor: getCurrentSelection(profileId) === 'maybe' ? 'warning.dark' : 'warning.main',
+                  bgcolor: getCurrentSelection(actualProfileId) === 'maybe' ? 'warning.dark' : 'warning.main',
                   color: 'black',
                   '&:hover': { 
                     bgcolor: 'warning.dark',
@@ -587,7 +601,7 @@ const ProfileViewer = () => {
                   },
                   minWidth: { xs: 80, sm: 160 },
                   height: { xs: 36, sm: 56 },
-                  border: getCurrentSelection(profileId) === 'maybe' ? '2px solid black' : 'none',
+                  border: getCurrentSelection(actualProfileId) === 'maybe' ? '2px solid black' : 'none',
                   fontSize: { xs: '0.875rem', sm: '1.2rem' },
                   transition: 'all 0.2s ease',
                   px: { xs: 1, sm: 3 }
@@ -600,7 +614,7 @@ const ProfileViewer = () => {
                 variant="contained"
                 startIcon={<CancelIcon sx={{ fontSize: { xs: 16, sm: 24 } }} />}
                 sx={{
-                  bgcolor: getCurrentSelection(profileId) === 'no' ? 'error.dark' : 'error.main',
+                  bgcolor: getCurrentSelection(actualProfileId) === 'no' ? 'error.dark' : 'error.main',
                   color: 'white',
                   '&:hover': { 
                     bgcolor: 'error.dark',
@@ -608,7 +622,7 @@ const ProfileViewer = () => {
                   },
                   minWidth: { xs: 80, sm: 160 },
                   height: { xs: 36, sm: 56 },
-                  border: getCurrentSelection(profileId) === 'no' ? '2px solid white' : 'none',
+                  border: getCurrentSelection(actualProfileId) === 'no' ? '2px solid white' : 'none',
                   fontSize: { xs: '0.875rem', sm: '1.2rem' },
                   transition: 'all 0.2s ease',
                   px: { xs: 1, sm: 3 }
@@ -712,6 +726,50 @@ const ProfileViewer = () => {
               Submit ({yesProfiles.length}/4 selected)
             </Button>
           </Box>
+
+          {/* Warning Dialog */}
+          <Dialog
+            open={showWarningDialog}
+            onClose={() => setShowWarningDialog(false)}
+            PaperProps={{
+              sx: {
+                borderRadius: 2,
+                p: 2,
+                maxWidth: '400px',
+                width: '100%'
+              }
+            }}
+          >
+            <DialogTitle sx={{ 
+              color: 'warning.main',
+              fontWeight: 'bold',
+              fontSize: '1.25rem',
+              textAlign: 'center'
+            }}>
+              Incomplete Profile Decisions
+            </DialogTitle>
+            <DialogContent>
+              <Typography sx={{ mb: 2, textAlign: 'center' }}>
+                You need to make a decision (Yes, Maybe, or No) for all profiles before submitting.
+              </Typography>
+              <Typography sx={{ color: 'text.secondary', textAlign: 'center' }}>
+                {`You have ${totalProfiles - (yesProfiles.length + maybeProfiles.length + noProfiles.length)} profiles left to review.`}
+              </Typography>
+            </DialogContent>
+            <DialogActions sx={{ justifyContent: 'center', pb: 2 }}>
+              <Button
+                onClick={() => setShowWarningDialog(false)}
+                variant="contained"
+                color="primary"
+                sx={{
+                  minWidth: '120px',
+                  fontWeight: 'bold'
+                }}
+              >
+                Continue Reviewing
+              </Button>
+            </DialogActions>
+          </Dialog>
         </Paper>
       </Fade>
     </Container>

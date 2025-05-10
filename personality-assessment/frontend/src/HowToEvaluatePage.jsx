@@ -46,7 +46,7 @@ const HowToEvaluatePage = () => {
               <ListItemText primary="· Conscientiousness (Organization) – how organized or reliable they are" />
             </ListItem>
              <ListItem sx={{ pl: 0, pt: 0, pb: 0.5 }}>
-               <ListItemText primary="· Emotional Stability (Emotionality) – how calm or stressed they usually are" />
+               <ListItemText primary="· Emotional Stability – how calm or stressed they usually are" />
              </ListItem>
             <ListItem sx={{ pl: 0, pt: 0, pb: 0.5 }}>
               <ListItemText primary="· Agreeableness (Friendliness) – how friendly or cooperative they are" />

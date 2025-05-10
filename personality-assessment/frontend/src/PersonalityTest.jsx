@@ -47,10 +47,9 @@ const ratingScale = [
   { value: 7, label: "Agree strongly" },
 ];
 
-const RatingInput = ({ value, onChange, isMobile, error }) => {
+const RatingInput = ({ value, onChange, error }) => {
   const theme = useTheme();
   
-  if (isMobile) {
     return (
       <Box sx={{ width: '100%', mt: 2 }}>
         <Slider
@@ -113,49 +112,6 @@ const RatingInput = ({ value, onChange, isMobile, error }) => {
           <span>Agree strongly</span>
         </Box>
       </Box>
-    );
-  }
-
-  return (
-    <ToggleButtonGroup
-      value={value}
-      exclusive
-      onChange={(_, newValue) => {
-        if (newValue !== null) {
-          onChange(newValue);
-        }
-      }}
-      sx={{
-        display: 'flex',
-        flexWrap: 'wrap',
-        gap: 1,
-        justifyContent: 'space-between',
-        '& .MuiToggleButton-root': {
-          flex: '1 0 calc(14% - 8px)',
-          border: `1px solid ${error ? theme.palette.error.main : theme.palette.divider}`,
-          '&.Mui-selected': {
-            backgroundColor: theme.palette.primary.main,
-            color: theme.palette.primary.contrastText,
-            '&:hover': {
-              backgroundColor: theme.palette.primary.dark,
-            },
-          },
-        },
-      }}
-    >
-      {ratingScale.map((scale) => (
-        <ToggleButton 
-          key={scale.value} 
-          value={scale.value.toString()}
-          sx={{
-            minWidth: '40px',
-            height: '40px',
-          }}
-        >
-          {scale.value}
-        </ToggleButton>
-      ))}
-    </ToggleButtonGroup>
   );
 };
 
@@ -276,7 +232,6 @@ export default function PersonalityTest() {
                       <RatingInput
                         value={field.value}
                         onChange={field.onChange}
-                        isMobile={isMobile}
                         error={!!errors[`q${index + 1}`]}
                       />
                     )}

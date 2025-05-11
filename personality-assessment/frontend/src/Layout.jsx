@@ -6,6 +6,7 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import DescriptionIcon from '@mui/icons-material/Description';
 import { Link as RouterLink, useLocation, Outlet } from 'react-router-dom';
 import { QuestionAnswer, GroupAdd } from '@mui/icons-material';
+import { STEP_PATHS, getStepFromPath } from './hooks/useStepGuard';
 
 const drawerWidth = 250;
 
@@ -18,6 +19,9 @@ const Layout = () => {
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+
+  const storedProgress = localStorage.getItem('userProgress');
+  const maxCompletedStep = storedProgress ? parseInt(storedProgress, 10) : -1;
 
   const isActive = (path) => {
     if (path === '/') return location.pathname === '/';
@@ -33,48 +37,62 @@ const Layout = () => {
     { text: 'Debriefing', icon: <DescriptionIcon />, path: '/debriefing' },
   ];
 
+  const visibleNavItems = navItemsTop.filter(item => {
+    const itemStep = getStepFromPath(item.path);
+    const currentPathStep = getStepFromPath(location.pathname);
+    return itemStep <= maxCompletedStep + 1 || itemStep === currentPathStep;
+  });
+
   const drawerContent = (
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <Toolbar sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', py: 2, backgroundColor: theme.palette.primary.main, color: theme.palette.primary.contrastText }}>
         <ScienceIcon sx={{ mr: 1.5, fontSize: '2rem' }} />
         <Typography variant="h5" noWrap component="div" sx={{ fontWeight: 'bold' }}>
-          SciPlatform
+          Trait Pilot
         </Typography>
       </Toolbar>
       <Divider />
       <List sx={{ flexGrow: 1, p: 1 }}>
-        {navItemsTop.map((item) => (
-          <ListItem key={item.text} disablePadding sx={{ display: 'block', mb: 0.5 }}>
-            <ListItemButton
-              component={RouterLink}
-              to={item.path}
-              selected={isActive(item.path)}
-              sx={{
-                borderRadius: theme.shape.borderRadius,
-                minHeight: 48,
-                px: 2.5,
-                color: isActive(item.path) ? theme.palette.primary.main : theme.palette.text.secondary,
-                backgroundColor: isActive(item.path) ? theme.palette.action.selected : 'transparent',
-                '&:hover': {
-                  backgroundColor: theme.palette.action.hover,
-                  color: theme.palette.primary.main,
-                  '& .MuiListItemIcon-root': { color: theme.palette.primary.main, }
-                },
-                '&.Mui-selected': {
-                  backgroundColor: theme.palette.primary.main,
-                  color: theme.palette.primary.contrastText,
-                  '& .MuiListItemIcon-root': { color: theme.palette.primary.contrastText, },
-                  '&:hover': { backgroundColor: theme.palette.primary.dark, }
-                },
-              }}
-            >
-              <ListItemIcon sx={{ minWidth: 0, mr: isActive(item.path) ? 2 : 2, justifyContent: 'center', color: 'inherit' }}>
-                {item.icon}
-              </ListItemIcon>
-              <ListItemText primary={item.text} primaryTypographyProps={{ fontWeight: isActive(item.path) ? 'bold' : 'normal', variant: 'body2' }} />
-            </ListItemButton>
-          </ListItem>
-        ))}
+        {visibleNavItems.map((item) => {
+          const itemStep = getStepFromPath(item.path);
+          const isEnabled = itemStep <= maxCompletedStep + 1;
+          
+          return (
+            <ListItem key={item.text} disablePadding sx={{ display: 'block', mb: 0.5 }}>
+              <ListItemButton
+                component={RouterLink}
+                to={item.path}
+                selected={isActive(item.path)}
+                disabled={!isEnabled}
+                sx={{
+                  borderRadius: theme.shape.borderRadius,
+                  minHeight: 48,
+                  px: 2.5,
+                  color: isActive(item.path) ? theme.palette.primary.main : (isEnabled ? theme.palette.text.secondary : theme.palette.text.disabled),
+                  backgroundColor: isActive(item.path) ? theme.palette.action.selected : 'transparent',
+                  cursor: isEnabled ? 'pointer' : 'not-allowed',
+                  opacity: isEnabled ? 1 : 0.6,
+                  '&:hover': {
+                    backgroundColor: isEnabled ? theme.palette.action.hover : 'transparent',
+                    color: isEnabled ? theme.palette.primary.main : theme.palette.text.disabled,
+                    '& .MuiListItemIcon-root': { color: isEnabled ? theme.palette.primary.main : theme.palette.text.disabled, }
+                  },
+                  '&.Mui-selected': {
+                    backgroundColor: theme.palette.primary.main,
+                    color: theme.palette.primary.contrastText,
+                    '& .MuiListItemIcon-root': { color: theme.palette.primary.contrastText, },
+                    '&:hover': { backgroundColor: theme.palette.primary.dark, }
+                  },
+                }}
+              >
+                <ListItemIcon sx={{ minWidth: 0, mr: isActive(item.path) ? 2 : 2, justifyContent: 'center', color: 'inherit' }}>
+                  {item.icon}
+                </ListItemIcon>
+                <ListItemText primary={item.text} primaryTypographyProps={{ fontWeight: isActive(item.path) ? 'bold' : 'normal', variant: 'body2' }} />
+              </ListItemButton>
+            </ListItem>
+          );
+        })}
       </List>
     </Box>
   );

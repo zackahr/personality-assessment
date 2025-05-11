@@ -12,11 +12,16 @@ import {
   Divider,
   Fade
 } from '@mui/material';
+import { useStepGuard, completeStep, getStepFromPath } from './hooks/useStepGuard';
 
 const HowToEvaluatePage = () => {
   const navigate = useNavigate();
 
+  // Current step for the guard
+  useStepGuard(3);
+
   const handleContinue = () => {
+    completeStep(3); // Mark step 3 as complete
     navigate('/profile/1'); // Navigate to the first profile
   };
 

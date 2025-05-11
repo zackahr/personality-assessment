@@ -27,6 +27,7 @@ import {
   ArrowBack,
   ArrowForward,
 } from '@mui/icons-material';
+import { useStepGuard, completeStep, getStepFromPath } from './hooks/useStepGuard';
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -37,6 +38,10 @@ const LandingPage = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
+  // Determine current step for the guard
+  // For LandingPage, it's always step 0
+  useStepGuard(0);
+
   const handleStart = () => {
     if (!agreed || !prolificId.trim()) {
       setShowError(true);
@@ -45,6 +50,7 @@ const LandingPage = () => {
     setShowError(false);
     localStorage.setItem('prolificId', prolificId.trim());
     localStorage.setItem('startTime', new Date().toISOString());
+    completeStep(0); // Mark step 0 as complete
     navigate('/personality-test');
   };
 

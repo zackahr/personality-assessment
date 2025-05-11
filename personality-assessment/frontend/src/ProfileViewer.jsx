@@ -9,6 +9,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { alpha } from '@mui/material/styles';
+import { useStepGuard, completeStep, getStepFromPath } from './hooks/useStepGuard';
 
 const API_BASE_URL = "/api";
 
@@ -93,6 +94,9 @@ const ProfileViewer = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const urlProfileId = parseInt(id, 10);
+
+  // Current step for the guard
+  useStepGuard(4);
 
   const [profiles, setProfiles] = useState({});
   const [urlMapping, setUrlMapping] = useState({});
@@ -231,7 +235,8 @@ const ProfileViewer = () => {
     localStorage.setItem('yesProfiles', JSON.stringify(yesProfiles));
     console.log('Yes profiles saved to localStorage:', yesProfiles);
 
-    // Navigate to the "/demographics" page
+    completeStep(4); // Mark step 4 as complete
+    // Navigate to the "/why" page
     navigate('/why');
   };
 

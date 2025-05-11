@@ -22,12 +22,17 @@ import {
   MenuItem,
   InputLabel
 } from '@mui/material';
+import { useStepGuard, completeStep, getStepFromPath } from './hooks/useStepGuard';
 
 const API_BASE_URL = "/api";
 
 const WhyPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
+
+  // Current step for the guard
+  useStepGuard(5);
+
   // Ensure yesProfiles is an array, even if localStorage is null or malformed
   let yesProfiles = [];
   try {
@@ -118,9 +123,9 @@ const WhyPage = () => {
       for (let i = 1; i <= totalProfileCount; i++) {
         // Note: This assumes profile IDs in localStorage decisions are 1-based and map to actual profile IDs
         // If urlMapping was used for decisions, this logic might need adjustment
-        const profileKey = `profile${i}_decision`; 
+        const profileKey = `profile${i}_decision`;
         const decision = localStorage.getItem(profileKey);
-        allProfileDecisions[profileKey] = decision || "not_viewed"; 
+        allProfileDecisions[profileKey] = decision || "not_viewed";
       }
 
       // Override with actual selections from the user journey
@@ -130,7 +135,7 @@ const WhyPage = () => {
       });
       // If you also have maybe/no from the previous step and want to record them, retrieve them here.
       // For simplicity, this example only focuses on the final YES selections for the payload.
-  
+
       const finalSelectionsForPayload = {};
       finalSelectedProfileIds.slice(0, 4).forEach((profileId, index) => { // Ensure only up to 4
         finalSelectionsForPayload[`final_profile_${index + 1}`] = profileId;
@@ -163,14 +168,15 @@ const WhyPage = () => {
       if (response.ok) {
         const result = await response.json();
         console.log('Response saved successfully. Participant ID:', result.participant_id);
-        
+  
         // Clear relevant localStorage items
         Object.keys(localStorage).forEach(key => {
-          if (key.startsWith('profile') || key === 'personalityTestResponses' || key === 'yesProfiles' || key === 'maybeProfiles' || key === 'noProfiles' || key === 'startTime' || key === 'prolificId' || key === 'taskCondition') {
+          if (key.startsWith('profile') || key === 'personalityTestResponses' || key === 'yesProfiles' || key === 'maybeProfiles' || key === 'noProfiles' || key === 'startTime' || key === 'prolificId' || key === 'taskCondition' || key === 'userProgress') {
             localStorage.removeItem(key);
           }
         });
         
+        completeStep(5); // Mark step 5 as complete
         navigate('/debriefing');
       } else {
         const errorData = await response.json();
@@ -264,7 +270,7 @@ const WhyPage = () => {
             onChange={(e) => setQualitiesAnswer(e.target.value)}
             sx={{ 
               mb: 4,
-              backgroundColor: 'background.paper'
+                backgroundColor: 'background.paper'
             }}
           />
 
@@ -285,7 +291,7 @@ const WhyPage = () => {
             onChange={(e) => setPersonalityAnswer(e.target.value)}
             sx={{ 
               mb: 4,
-              backgroundColor: 'background.paper'
+                backgroundColor: 'background.paper'
             }}
           />
         </Box>

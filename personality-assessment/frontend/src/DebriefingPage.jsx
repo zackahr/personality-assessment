@@ -1,7 +1,11 @@
 import React from 'react';
 import { Container, Typography, Paper, Box, Link, Divider } from '@mui/material';
+import { useStepGuard, getStepFromPath } from './hooks/useStepGuard';
 
 const DebriefingPage = () => {
+  // Current step for the guard
+  useStepGuard(6);
+
   return (
     <Container maxWidth="md" sx={{ py: 4 }}>
       <Paper elevation={3} sx={{ p: 4, borderRadius: 2 }}>

@@ -12,6 +12,7 @@ import {
   ListItemText,
   Divider,
 } from '@mui/material';
+import { useStepGuard, completeStep, getStepFromPath } from './hooks/useStepGuard';
 
 const scenario = {
   title: "GlobaTech International Expansion Initiative",
@@ -48,6 +49,9 @@ const TaskDescription = () => {
   const navigate = useNavigate();
   const [selectedTaskKey, setSelectedTaskKey] = useState(null);
 
+  // Current step for the guard
+  useStepGuard(2);
+
   useEffect(() => {
     // Randomly select a task variation if not already set
     if (!selectedTaskKey) {
@@ -60,6 +64,7 @@ const TaskDescription = () => {
   }, [selectedTaskKey]);
 
   const handleContinue = () => {
+    completeStep(2); // Mark step 2 as complete
     navigate('/how-to-evaluate');
   };
 

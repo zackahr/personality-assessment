@@ -12,6 +12,7 @@ export const STEP_PATHS = {
                            // The ProfileViewer itself handles navigation between profiles (e.g., /profile/2, etc.)
                            // Step 4 is considered complete when all profiles are reviewed and selection is submitted from ProfileViewer.
   5: '/why',                // Reflection page
+  6: '/debriefing'         // Debriefing page
 };
 
 // Helper to get the current step number from a pathname
@@ -80,7 +81,6 @@ export const getNextStepPath = (currentStepNumber) => {
   if (STEP_PATHS[nextStep]) {
     return STEP_PATHS[nextStep];
   }
-  // If there's no next step defined, perhaps stay on current or go to a summary/end page.
-  // For now, let's return the path of the last known step (debriefing).
-  return STEP_PATHS[Object.keys(STEP_PATHS).length - 1] || '/'; 
+  // If there's no next step defined, return the path of the current step (it's the last step).
+  return STEP_PATHS[currentStepNumber] || '/';
 }; 

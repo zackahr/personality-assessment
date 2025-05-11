@@ -21,6 +21,7 @@ import {
   Stack,
 } from '@mui/material';
 import { Science, CheckCircle } from '@mui/icons-material';
+import { useStepGuard, completeStep, getStepFromPath } from './hooks/useStepGuard';
 
 const API_BASE_URL = "/api";
 
@@ -119,6 +120,9 @@ export default function PersonalityTest() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
+  // Current step for the guard
+  useStepGuard(1);
+
   const { 
     control, 
     handleSubmit, 
@@ -147,6 +151,7 @@ export default function PersonalityTest() {
         }),
       });
 
+      completeStep(1); // Mark step 1 as complete
       navigate('/task-description');
     } catch (error) {
       console.error('Error:', error);

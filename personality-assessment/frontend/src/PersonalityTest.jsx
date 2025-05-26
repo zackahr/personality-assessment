@@ -103,13 +103,14 @@ const RatingInput = ({ value, onChange, error }) => {
           mt: 1,
           px: 1,
           '& > span': {
-            fontSize: '0.75rem',
+            fontSize: '1rem',
             color: 'text.secondary',
             textAlign: 'center',
-            maxWidth: '80px'
+            maxWidth: '200px'
           }
         }}>
           <span>Disagree strongly</span>
+          <span>Neither agree nor disagree</span>
           <span>Agree strongly</span>
         </Box>
       </Box>
@@ -129,7 +130,7 @@ export default function PersonalityTest() {
     formState: { errors } 
   } = useForm({
     defaultValues: questions.reduce((acc, _, index) => {
-      acc[`q${index + 1}`] = "";
+      acc[`q${index + 1}`] = "4"; // Initialize with "4" instead of ""
       return acc;
     }, {})
   });

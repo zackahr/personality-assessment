@@ -220,9 +220,7 @@ const WhyPage = () => {
                 <Grid item xs={12} md={6} key={profileId}>
                   <Card elevation={0} sx={{ height: '100%', border: theme => `1px solid ${theme.palette.divider}` }}> {/* Use theme border */}
                     <CardContent>
-                      <Typography variant="h6" color="primary" gutterBottom>
-                        Profile {profileId}
-                      </Typography>
+                     
                       {allProfilesData[profileId] ? ( // Check allProfilesData here
                         <>
                           <Typography variant="body2" sx={{ mb: 2, color: 'text.secondary' }}>
@@ -253,11 +251,8 @@ const WhyPage = () => {
         )}
 
         <Box sx={{ mb: 4 }}>
-          <Typography variant="h6" sx={{ mb: 1, color: 'primary.dark' }}>
-            Reflection Question 1:
-          </Typography>
-          <Typography variant="subtitle1" sx={{ mb: 2, color: 'text.secondary' }}>
-            What qualities did you focus on when choosing your team members?
+          <Typography variant="h5" sx={{ mb: 1, color: 'primary.dark' }}>
+            How did you decide between profiles when traits seemed equally important or conflicting?
           </Typography>
           <TextField
             fullWidth
@@ -265,7 +260,7 @@ const WhyPage = () => {
             required
             rows={4}
             variant="outlined"
-            placeholder="Consider the personality traits, characteristics, and qualities that influenced your choices..."
+            placeholder="Explain how you made tough choices, resolved trade-offs, or prioritized one quality over another..."
             value={qualitiesAnswer}
             onChange={(e) => setQualitiesAnswer(e.target.value)}
             sx={{ 
@@ -273,12 +268,8 @@ const WhyPage = () => {
                 backgroundColor: 'background.paper'
             }}
           />
-
-          <Typography variant="h6" sx={{ mb: 1, color: 'primary.dark' }}>
-            Reflection Question 2:
-          </Typography>
-          <Typography variant="subtitle1" sx={{ mb: 2, color: 'text.secondary' }}>
-            How do you think your own personality influenced your selection decisions?
+          <Typography variant="h5" sx={{ mb: 1, color: 'primary.dark' }}>
+            How did the specific requirements of the project influence which personality profiles you selected?          
           </Typography>
           <TextField
             fullWidth
@@ -286,7 +277,7 @@ const WhyPage = () => {
             required
             rows={4}
             variant="outlined"
-            placeholder="Reflect on how your own personality traits and preferences may have affected your choices..."
+            placeholder="Consider which project requirements guided your choices and how you matched these needs with specific personality traits..."
             value={personalityAnswer}
             onChange={(e) => setPersonalityAnswer(e.target.value)}
             sx={{ 
@@ -299,7 +290,7 @@ const WhyPage = () => {
         <Divider sx={{ my: 4 }} />
 
         <Box sx={{ mb: 4 }}>
-          <Typography variant="h6" sx={{ mb: 3, color: 'primary.dark' }}>
+          <Typography variant="h5" sx={{ mb: 3, color: 'primary.dark' }}>
             Demographic Information
           </Typography>
           <Grid container spacing={3}>

@@ -7,41 +7,34 @@ import {
   Box,
   Button,
   Fade,
-  List,
-  ListItem,
-  ListItemText,
   Divider,
 } from '@mui/material';
-import { useStepGuard, completeStep, getStepFromPath } from './hooks/useStepGuard';
-
-const scenario = {
-  title: "GlobaTech International Expansion Initiative",
-  description: `You are part of a strategic task force at GlobaTech, a fast-growing company that manufactures smart home appliances. GlobaTech is planning to expand into a new international market, and your team has been asked to lead this initiative. The project includes:`,
-  points: [
-    "Market Selection: Choosing the most promising country or region for entry.",
-    "Product Strategy: Deciding which product lines to introduce and how to position them.",
-    "Operational Planning: Assessing logistics, partnerships, and regulatory considerations to ensure a successful launch."
-  ]
-};
+import { useStepGuard, completeStep } from './hooks/useStepGuard';
 
 const taskVariations = {
   creative: {
-    title: "Task: Innovative Market Entry",
-    description: `We're looking for a bold and original approach to international expansion. Think beyond conventional strategies—how can GlobaTech surprise and engage a new audience? We encourage imaginative thinking, fresh branding ideas, and creative product-market fit solutions. You have the freedom to explore new directions for the company's global future.`,
-    instruction: `You are in charge of assembling a team to lead this project. We will show you several personality profiles; please choose four people whom you believe will work best on this task.`,
-    framing: "Creative Framing"
+    title: "Creative Framing",
+    description: `You and your business partners started a small company three years ago. After countless late nights, personal sacrifices, and investing your own savings, you've finally developed a product you're truly proud of. This launch represents years of your personal dedication and dreams.
+
+Now that it’s time to bring your product to market, your goal is to create a strong, distinctive launch that resonates with customers. You want the launch to reflect your vision and help the product make a lasting impression in a competitive space. Original thinking, meaningful storytelling, and thoughtful positioning will all contribute to success.`,
+    instruction: `Please select four team members you believe would be best suited to tackle the challenges of this launch.`,
+    framing: "Creative"
   },
   analytical: {
-    title: "Task: Data-Driven Market Analysis",
-    description: `This project will require careful analysis of international market trends, cost structures, competitive landscapes, and legal constraints. We need a rigorous, evidence-based plan to ensure GlobaTech's success in a new region. Systematic thinking, data interpretation, and strategic risk assessment will be key.`,
-    instruction: `You are in charge of assembling a team to lead this project. We will show you several personality profiles; please choose four people whom you believe will work best on this task.`,
-    framing: "Analytical Framing"
+    title: "Analytical Framing",
+    description: `You and your business partners started a small company three years ago. After countless late nights, personal sacrifices, and investing your own savings, you've finally developed a product you're truly proud of. This launch represents years of your personal dedication and dreams.
+
+As you prepare to bring the product to market, your team must develop a thorough, well-structured plan to ensure a successful rollout. This includes strategic use of data, confident decision-making, and effective management of limited resources. Your goal is to deliver results efficiently and reliably while navigating a dynamic market environment.`,
+    instruction: `Please select four team members you believe would be best suited to tackle the challenges of this launch.`,
+    framing: "Analytical"
   },
   neutral: {
-    title: "Task: Strategic Expansion Plan",
-    description: `You are tasked with developing a viable strategy for GlobaTech to expand into a new international market. Consider product strategy, market selection, and operational planning. There's no single right way—just ensure your proposal is well-rounded and addresses the key components for a successful expansion.`,
-    instruction: `You are in charge of assembling a team to lead this project. We will show you several personality profiles; please choose four people whom you believe will work best on this task.`,
-    framing: "Neutral (Control) Framing"
+    title: "Neutral Framing",
+    description: `You and your business partners started a small company three years ago. After countless late nights, personal sacrifices, and investing your own savings, you've finally developed a product you're truly proud of. This launch represents years of your personal dedication and dreams.
+
+This launch is as critical as it is complex. Your team will need to craft a balanced, comprehensive approach that addresses all key aspects—from outreach and customer experience to operations and growth planning. A successful outcome will depend on your team’s ability to coordinate effectively across different areas and adapt to evolving needs.`,
+    instruction: `Please select four team members you believe would be best suited to tackle the challenges of this launch.`,
+    framing: "Neutral"
   }
 };
 
@@ -49,22 +42,19 @@ const TaskDescription = () => {
   const navigate = useNavigate();
   const [selectedTaskKey, setSelectedTaskKey] = useState(null);
 
-  // Current step for the guard
   useStepGuard(2);
 
   useEffect(() => {
-    // Randomly select a task variation if not already set
     if (!selectedTaskKey) {
       const taskKeys = Object.keys(taskVariations);
       const randomTaskKey = taskKeys[Math.floor(Math.random() * taskKeys.length)];
       setSelectedTaskKey(randomTaskKey);
-      // Store the framing in localStorage for later use
       localStorage.setItem('taskCondition', taskVariations[randomTaskKey].framing);
     }
   }, [selectedTaskKey]);
 
   const handleContinue = () => {
-    completeStep(2); // Mark step 2 as complete
+    completeStep(2);
     navigate('/how-to-evaluate');
   };
 
@@ -77,43 +67,19 @@ const TaskDescription = () => {
       <Fade in timeout={500}>
         <Paper elevation={3} sx={{ p: 4, borderRadius: 2 }}>
           <Typography variant="h4" component="h1" sx={{ mb: 3, color: 'primary.main', fontWeight: 'bold', textAlign: 'center' }}>
-            {scenario.title}
+            Task Description
           </Typography>
 
-          <Box sx={{ mb: 3 }}>
-            <Typography variant="h6" sx={{ mb: 1, color: 'text.secondary' }}>
-              Overall Scenario:
-            </Typography>
+          <Box sx={{ mb: 4 }}>
             <Typography variant="body1" paragraph>
-              {scenario.description}
-            </Typography>
-            <List dense sx={{ pl: 2, mb: 2 }}>
-              {scenario.points.map((point, index) => (
-                <ListItem key={index} sx={{ pl: 0, pt: 0, pb: 0.5 }}>
-                  <ListItemText primary={`• ${point}`} />
-                </ListItem>
-              ))}
-            </List>
-          </Box>
-
-          <Divider sx={{ my: 3 }} />
-
-          <Box sx={{ mb: 4, p: 2, backgroundColor: 'grey.100', borderRadius: 1 }}>
-            <Typography variant="h5" component="h2" sx={{ mb: 2, color: 'secondary.main', fontWeight: 'bold' }}>
-              Your Task
-            </Typography>
-            <Typography variant="body1" paragraph >
               {selectedTask.description}
             </Typography>
-            <Typography variant="body1" paragraph>
-              {selectedTask.instruction}
-            </Typography>
           </Box>
-          
+
           <Divider sx={{ my: 4 }} />
 
           <Typography variant="body1" paragraph sx={{ fontWeight: 'bold', textAlign: 'center' }}>
-            Please select individuals who you believe would form an effective team for the task described above.
+              {selectedTask.instruction}
           </Typography>
 
           <Box sx={{ mt: 4, display: 'flex', justifyContent: 'center' }}>
@@ -143,4 +109,4 @@ const TaskDescription = () => {
   );
 };
 
-export default TaskDescription; 
+export default TaskDescription;

@@ -193,21 +193,31 @@ def save_to_csv(data):
         os.makedirs(data_dir)
     
     # Define the CSV file path in the data directory
-    csv_file_path = os.path.join(data_dir, 'responses.csv')
+    csv_file_path = os.path.join(data_dir, 'responses2.csv')
     
     # Define headers based on your data structure
     headers = [
-        'participant_id', 'start_time', 'end_time',
+        # Participant Identifiers
+        'participant_id', 'prolific_id',
+        # Timestamps
+        'start_time', 'end_time',
+        # Personality Questions
         'personality_q1', 'personality_q2', 'personality_q3', 'personality_q4', 'personality_q5',
         'personality_q6', 'personality_q7', 'personality_q8', 'personality_q9', 'personality_q10',
+        # Profile Decisions
         'profile1_decision', 'profile2_decision', 'profile3_decision', 'profile4_decision',
         'profile5_decision', 'profile6_decision', 'profile7_decision', 'profile8_decision',
         'profile9_decision', 'profile10_decision', 'profile11_decision', 'profile12_decision',
         'profile13_decision', 'profile14_decision', 'profile15_decision', 'profile16_decision',
         'profile17_decision', 'profile18_decision', 'profile19_decision',
+        # Task Information
+        'task_condition',
+        # Final Profile Selections
         'final_profile_1', 'final_profile_2', 'final_profile_3', 'final_profile_4',
+        # Open-Ended Questions
         'open_ended_q1', 'open_ended_q2',
-        'prolific_id', 'task_condition', 'age', 'gender', 'education_level'
+        # Demographics
+        'age', 'gender', 'education_level'
     ]
     
     # Check if file exists to determine if we need to write headers

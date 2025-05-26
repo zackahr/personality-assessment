@@ -72,7 +72,7 @@ const LandingPage = () => {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        minHeight: '100vh', // Ensure container takes full viewport height
+        minHeight: '100vh',
       }}
     >
       <Paper 
@@ -82,8 +82,8 @@ const LandingPage = () => {
           borderRadius: 2, 
           position: 'relative',
           overflow: 'hidden',
-          width: '100%', // Ensure paper takes full width of container
-          mx: 'auto', // Center horizontally
+          width: '100%',
+          mx: 'auto',
         }}
       >
         {currentSlide === 0 ? (
@@ -98,7 +98,7 @@ const LandingPage = () => {
                 fontWeight: 'bold',
               }}
             >
-              Welcome to the Personality and Team Formation Study
+              Welcome to the Decision & Personality Study
             </Typography>
 
             <Typography variant="body1" paragraph sx={{ 
@@ -108,7 +108,7 @@ const LandingPage = () => {
               maxWidth: '800px',
               mb: 3
             }}>
-              Thank you for participating!
+              We appreciate your participation!
             </Typography>
 
             <Typography variant="body1" paragraph sx={{ 
@@ -118,7 +118,7 @@ const LandingPage = () => {
               maxWidth: '800px',
               mb: 3
             }}>
-              This study explores how people make decisions when forming teams. You will take on the role of someone assembling a team for a collaborative project, and your task is to select team members based on personality profiles.
+              In this study, you'll take on the role of someone assembling a team for a real-world project. You'll review a set of candidate profiles—each describing someone's personality—and make decisions about who you'd want on your team.
             </Typography>
 
             <Typography variant="body1" paragraph sx={{ 
@@ -128,7 +128,17 @@ const LandingPage = () => {
               maxWidth: '800px',
               mb: 3
             }}>
-              There are no right or wrong answers—please respond according to your own preferences and instincts.
+              There are no right or wrong answers. We're interested in how people naturally use personality information when making team-related decisions.
+            </Typography>
+
+            <Typography variant="body1" paragraph sx={{ 
+              fontSize: isMobile ? '0.9rem' : '1rem',
+              textAlign: 'left',
+              mx: 'auto',
+              maxWidth: '800px',
+              mb: 3
+            }}>
+              Your participation helps us improve how teams are formed in organizations, education, and beyond.
             </Typography>
 
             <Typography 
@@ -158,25 +168,25 @@ const LandingPage = () => {
               }}>
                 <ListItem sx={{ pl: 0 }}>
                   <ListItemText
-                    primary="1. Complete a brief personality questionnaire (BFI-10)"
+                    primary="1. Take a short personality questionnaire"
                     primaryTypographyProps={{ fontSize: isMobile ? '0.9rem' : '1rem' }}
                   />
                 </ListItem>
                 <ListItem sx={{ pl: 0 }}>
                   <ListItemText
-                    primary="2. Review and evaluate 20 personality profiles"
+                    primary="2. Review 20 candidate profiles"
                     primaryTypographyProps={{ fontSize: isMobile ? '0.9rem' : '1rem' }}
                   />
                 </ListItem>
                 <ListItem sx={{ pl: 0 }}>
                   <ListItemText
-                    primary="3. Select four profiles to form your team"
+                    primary="3. Select the 4 individuals you'd most want on your team"
                     primaryTypographyProps={{ fontSize: isMobile ? '0.9rem' : '1rem' }}
                   />
                 </ListItem>
                 <ListItem sx={{ pl: 0 }}>
                   <ListItemText
-                    primary="4. Reflect on your choices by answering a few short questions"
+                    primary="4. Reflect briefly on your decisions"
                     primaryTypographyProps={{ fontSize: isMobile ? '0.9rem' : '1rem' }}
                   />
                 </ListItem>
@@ -193,23 +203,7 @@ const LandingPage = () => {
                 mb: 3
               }}
             >
-              Estimated total time: 10–15 minutes
-            </Typography>
-
-            <Typography 
-              variant="body2"
-              sx={{
-                mt: isMobile ? 2 : 3,
-                mb: isMobile ? 3 : 4,
-                fontSize: isMobile ? '0.85rem' : '0.95rem',
-                textAlign: 'left',
-                mx: 'auto',
-                maxWidth: '800px',
-                fontStyle: 'italic',
-                color: 'text.secondary'
-              }}
-            >
-              The personality profiles you'll see are based on real-world data and describe typical behavioral patterns. Your responses will help us understand how personality traits influence team-building decisions.
+              Estimated time: 10–15 minutes
             </Typography>
 
             <Box sx={{ mb: 3, maxWidth: '400px', mx: 'auto' }}>
@@ -278,58 +272,92 @@ const LandingPage = () => {
                 mt: isMobile ? 1 : 0
               }}
             >
-              Informed Consent
+              Consent
             </Typography>
 
             <Box sx={{
               textAlign: 'left',
               mx: 'auto',
               maxWidth: '800px',
-              maxHeight: isMobile ? 'calc(100vh - 300px)' : 'calc(100vh - 350px)',
-              overflowY: 'auto',
               pr: 2,
               mb: 3
             }}>
               <Typography variant={isMobile ? "subtitle1" : "h6"} gutterBottom sx={{ fontWeight: 'bold' }}>
-                Study Title: Personality and Team Choice Study
+                Study Title: Decision-Making and Personality in Team Formation
               </Typography>
               <Typography variant="body2" paragraph sx={{ fontSize: isMobile ? '0.85rem' : '0.95rem' }}>
-                Thank you for your interest in this study!
+                Thank you for your interest in this research study. Before you begin, please take a moment to review the information below. It outlines your rights as a participant, how your data will be used, and what to expect.
               </Typography>
-              <Typography variant="body2" paragraph sx={{ fontSize: isMobile ? '0.85rem' : '0.95rem' }}>
-                This research explores how people make decisions based on personality when forming teams. You'll be asked to complete a short personality questionnaire, review a set of personality profiles, select four team members, and briefly reflect on your choices.
+              
+              <Typography variant={isMobile ? "subtitle1" : "h6"} gutterBottom sx={{ fontWeight: 'bold', mt: 2 }}>
+                Key Information
               </Typography>
-              <Typography variant="body2" paragraph sx={{ fontSize: isMobile ? '0.85rem' : '0.95rem' }}>
-                The study takes about 10–15 minutes. Participation is entirely voluntary—you may withdraw at any time by closing your browser. There are no penalties for withdrawing.
-              </Typography>
-              <Typography variant="body2" paragraph sx={{ fontSize: isMobile ? '0.85rem' : '0.95rem' }}>
-                There are no known risks involved. While there are no direct benefits, your responses will contribute to research on teamwork and decision-making.
-              </Typography>
-              <Typography variant="body2" paragraph sx={{ fontSize: isMobile ? '0.85rem' : '0.95rem' }}>
-                Your data will remain anonymous and securely stored. No identifying information will be collected, and your Prolific ID will not be linked to your answers.
-              </Typography>
-              <Typography variant="body2" paragraph sx={{ fontSize: isMobile ? '0.85rem' : '0.95rem' }}>
-                If you have any questions, you can contact the research team via Prolific messaging.
-              </Typography>
-              <Typography variant="body2" paragraph sx={{ fontSize: isMobile ? '0.85rem' : '0.95rem', mt: 2, fontWeight: 'bold' }}>
-                By clicking "I Agree," you confirm that you:
+              
+              <List dense sx={{ pl: 2, fontSize: isMobile ? '0.85rem' : '0.95rem' }}>
+                <ListItem sx={{ display: 'list-item', pl: 0, pt: 0, pb: 0 }}>
+                  <Typography component="span" sx={{ fontWeight: 'bold' }}>Purpose:</Typography> To study how people evaluate others based on personality traits during team formation.
+                </ListItem>
+                <ListItem sx={{ display: 'list-item', pl: 0, pt: 0, pb: 0 }}>
+                  <Typography component="span" sx={{ fontWeight: 'bold' }}>Tasks:</Typography> You will complete a personality questionnaire, evaluate a set of profiles, select team members, and answer brief reflection questions.
+                </ListItem>
+                <ListItem sx={{ display: 'list-item', pl: 0, pt: 0, pb: 0 }}>
+                  <Typography component="span" sx={{ fontWeight: 'bold' }}>Duration:</Typography> 10–15 minutes.
+                </ListItem>
+                <ListItem sx={{ display: 'list-item', pl: 0, pt: 0, pb: 0 }}>
+                  <Typography component="span" sx={{ fontWeight: 'bold' }}>Voluntary Participation:</Typography> You may stop at any time by closing your browser. You will not be penalized in any way.
+                </ListItem>
+                <ListItem sx={{ display: 'list-item', pl: 0, pt: 0, pb: 0 }}>
+                  <Typography component="span" sx={{ fontWeight: 'bold' }}>Risks:</Typography> There are no anticipated risks associated with this study.
+                </ListItem>
+                <ListItem sx={{ display: 'list-item', pl: 0, pt: 0, pb: 0 }}>
+                  <Typography component="span" sx={{ fontWeight: 'bold' }}>Benefits:</Typography> There are no direct personal benefits. However, your participation contributes to research on decision-making, personality, and teamwork.
+                </ListItem>
+                <ListItem sx={{ display: 'list-item', pl: 0, pt: 0, pb: 0 }}>
+                  <Typography component="span" sx={{ fontWeight: 'bold' }}>Compensation:</Typography> You will be compensated through Prolific in accordance with the platform's guidelines.
+                </ListItem>
+                <ListItem sx={{ display: 'list-item', pl: 0, pt: 0, pb: 0 }}>
+                  <Typography component="span" sx={{ fontWeight: 'bold' }}>Confidentiality:</Typography> No personal or identifying data will be collected. Your Prolific ID is used only for compensation purposes and will not be linked to your responses. All data will be stored securely and anonymously.
+                </ListItem>
+              </List>
+              
+              <Typography variant="body2" paragraph sx={{ fontSize: isMobile ? '0.85rem' : '0.95rem', mt: 2 }}>
+                You must be:
               </Typography>
               <List dense sx={{ pl: 2, fontSize: isMobile ? '0.85rem' : '0.95rem' }}>
                 <ListItem sx={{ display: 'list-item', pl: 0, pt: 0, pb: 0 }}>
-                  Have read and understood the information above
+                  At least 18 years old
                 </ListItem>
                 <ListItem sx={{ display: 'list-item', pl: 0, pt: 0, pb: 0 }}>
-                  Voluntarily agree to participate
+                  Fluent in English
                 </ListItem>
                 <ListItem sx={{ display: 'list-item', pl: 0, pt: 0, pb: 0 }}>
-                  Are at least 18 years old
+                  Providing informed consent voluntarily
+                </ListItem>
+              </List>
+              
+              <Typography variant="body2" paragraph sx={{ fontSize: isMobile ? '0.85rem' : '0.95rem', mt: 2 }}>
+                If you have any questions, you may contact the research team at any time via Prolific's messaging system.
+              </Typography>
+              
+              <Typography variant="body2" paragraph sx={{ fontSize: isMobile ? '0.85rem' : '0.95rem', mt: 2, fontWeight: 'bold' }}>
+                By continuing, you indicate that:
+              </Typography>
+              <List dense sx={{ pl: 2, fontSize: isMobile ? '0.85rem' : '0.95rem' }}>
+                <ListItem sx={{ display: 'list-item', pl: 0, pt: 0, pb: 0 }}>
+                  You have read and understood the information above
+                </ListItem>
+                <ListItem sx={{ display: 'list-item', pl: 0, pt: 0, pb: 0 }}>
+                  You voluntarily agree to participate
+                </ListItem>
+                <ListItem sx={{ display: 'list-item', pl: 0, pt: 0, pb: 0 }}>
+                  You meet the eligibility requirements
                 </ListItem>
               </List>
             </Box>
 
             <FormControlLabel
               control={<Checkbox checked={agreed} onChange={(e) => setAgreed(e.target.checked)} />}
-              label="I have read, understood, and agree to participate."
+              label="I Agree to Participate"
               sx={{ mt: 2, display: 'flex', justifyContent: 'center' }}
             />
 

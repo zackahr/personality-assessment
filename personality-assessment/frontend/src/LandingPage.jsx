@@ -289,7 +289,7 @@ const LandingPage = () => {
                 Thank you for your interest in this research study. Before you begin, please take a moment to review the information below. It outlines your rights as a participant, how your data will be used, and what to expect.
               </Typography>
               
-              <Typography variant={isMobile ? "subtitle1" : "h6"} gutterBottom sx={{ fontWeight: 'bold', mt: 2 }}>
+              <Typography variant={isMobile ? "subtitle1" : "h6"} gutterBottom sx={{ fontWeight: 'bold', mt: 2, color: '#f0303' }}>
                 Key Information
               </Typography>
               
@@ -320,18 +320,18 @@ const LandingPage = () => {
                 </ListItem>
               </List>
               
-              <Typography variant="body2" paragraph sx={{ fontSize: isMobile ? '0.85rem' : '0.95rem', mt: 2 }}>
+              <Typography variant={isMobile ? "subtitle1" : "h6"} gutterBottom sx={{ fontWeight: 'bold', mt: 2, color: '#f0303' }}>
                 You must be:
               </Typography>
               <List dense sx={{ pl: 2, fontSize: isMobile ? '0.85rem' : '0.95rem' }}>
                 <ListItem sx={{ display: 'list-item', pl: 0, pt: 0, pb: 0 }}>
-                  At least 18 years old
+                  * At least 18 years old
                 </ListItem>
                 <ListItem sx={{ display: 'list-item', pl: 0, pt: 0, pb: 0 }}>
-                  Fluent in English
+                  * Fluent in English
                 </ListItem>
                 <ListItem sx={{ display: 'list-item', pl: 0, pt: 0, pb: 0 }}>
-                  Providing informed consent voluntarily
+                  * Providing informed consent voluntarily
                 </ListItem>
               </List>
               
@@ -339,18 +339,18 @@ const LandingPage = () => {
                 If you have any questions, you may contact the research team at any time via Prolific's messaging system.
               </Typography>
               
-              <Typography variant="body2" paragraph sx={{ fontSize: isMobile ? '0.85rem' : '0.95rem', mt: 2, fontWeight: 'bold' }}>
+              <Typography variant={isMobile ? "subtitle1" : "h6"} gutterBottom sx={{ fontWeight: 'bold', mt: 2, color: '#f0303' }}>
                 By continuing, you indicate that:
               </Typography>
               <List dense sx={{ pl: 2, fontSize: isMobile ? '0.85rem' : '0.95rem' }}>
                 <ListItem sx={{ display: 'list-item', pl: 0, pt: 0, pb: 0 }}>
-                  You have read and understood the information above
+                  * You have read and understood the information above
                 </ListItem>
                 <ListItem sx={{ display: 'list-item', pl: 0, pt: 0, pb: 0 }}>
-                  You voluntarily agree to participate
+                  * You voluntarily agree to participate
                 </ListItem>
                 <ListItem sx={{ display: 'list-item', pl: 0, pt: 0, pb: 0 }}>
-                  You meet the eligibility requirements
+                  * You meet the eligibility requirements
                 </ListItem>
               </List>
             </Box>
